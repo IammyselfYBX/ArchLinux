@@ -227,3 +227,68 @@ let g:mkdp_port = ''
 " preview page title
 " ${name} will be replace with the file name
 let g:mkdp_page_title = '「${name}」'
+
+set wildmenu
+map Q :q<CR>
+map S :w<CR>
+map R :source $MYVIMRC<CR>
+map <C-a> <ESC>ggVG
+noremap ; :
+inoremap ( ()<ESC>i
+inoremap [ []<ESC>i
+inoremap { {}<ESC>i
+inoremap < <><ESC>i
+inoremap ' ''<ESC>i
+inoremap " ""<ESC>i
+inoremap /* /**/<ESC>hi
+
+
+
+"=============================================
+set ts=2
+set wildmenu
+set scrolloff=5 "永远与最上面，最下面保持5行
+set cursorline
+set showcmd
+
+"==================================
+set encoding=utf-8
+
+"==========================================
+call plug#begin('~/.vim/plugged')
+	Plug 'vim-airline/vim-airline'
+	Plug 'majutsushi/tagbar'
+	Plug 'scrooloose/nerdtree'
+	Plug 'iamcco/mathjax-support-for-mkdp'
+call plug#end()
+
+"==================NERDTree插件配置开始=================================================
+"将F2设置为开关NERDTree的快捷键
+map <f2> :NERDTreeToggle<cr>
+"修改树的显示图标
+	let g:NERDTreeDirArrowExpandable = '+'
+	let g:NERDTreeDirArrowCollapsible = '-'
+"窗口位置
+	let g:NERDTreeWinPos='left'
+"窗口尺寸
+ 	let g:NERDTreeSize=30
+"不显示隐藏文件
+	let g:NERDTreeHidden=0
+
+
+"=============== Java ======================================
+ab java_main public static void main(String[<ESC> a argv<ESC>A{<CR><ESC>O<TAB>
+ab syso System.out.println(<ESC>A;<ESC>hi
+ab java_try try{<CR><ESC>Acatch(<ESC>A{<CR><ESC>ki
+
+
+	 
+
+
+"=============== C =========================================
+ab c_main int main(int argc, char *argv[<ESC>A{<CR><ESC>O<TAB>
+
+
+"=============== HTML ====================================
+ab HTML !DOCTYPE html<ESC>A<CR><html<ESC>A<CR></html<ESC>O<TAB><head<ESC>A<CR></head<ESC>O<TAB><meta charset="utf-8<ESC>o<title<ESC>A TITLE </title<ESC><CR>o<boby<ESC>o</boby<ESC>O
+
