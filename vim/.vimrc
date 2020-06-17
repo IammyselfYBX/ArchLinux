@@ -92,13 +92,13 @@ if has("autocmd")
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
-var a=1;
 
 "============= 文件格式 =====================
 set encoding=utf-8
 
 "想使用 <SPACE><SPACE> 来进行跳转下一个占位符<++>
 noremap <SPACE><SPACE> <Esc>/<++><CR>:nohlsearch<CR>4xi
+
 
 ":%TOhtml 想打印 html 文件
 
@@ -117,11 +117,15 @@ call plug#begin('~/.vim/plugged')
 	Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}	
 
 	Plug 'dense-analysis/ale'	
-	Plug 'ycm-core/YouCompleteMe'
+	"Plug 'ycm-core/YouCompleteMe'
 
 	"vim snippets
 	Plug 'honza/vim-snippets'
 	Plug 'SirVer/ultisnips'
+
+	" A Vim Plugin for Lively Previewing LaTeX PDF Output
+	Plug 'jcf/vim-latex'	"vim-latex，编译latex文档，使生成pdf文档
+	Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }	"用pdf软件实时预览latex文档的编写
 call plug#end()
 
 "------------------ NERDTree插件配置 -------------------------
@@ -184,25 +188,52 @@ let g:mkdp_page_title = '「${name}」'
 "==================Snippet------------------------------------
 " 下面是相关的配置信息
 let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsListSnippets = "<c-tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+"let g:UltiSnipsListSnippets = "<c-tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"	  "<tab>切换下一个
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"	"<Shift-tab>切换上一个
 
-"=============== Java ======================================
-"ab java_main public static void main(String[<ESC> a argv<ESC>A{<CR><ESC>O<ESC>i<TAB>
-"ab syso System.out.println(<ESC>A;<ESC>hi
-"ab java_try try{<CR><ESC>Acatch(<ESC>A{<CR><ESC>ki
-
-	 
+let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+"let g:UltiSnipsSnippetDirectories = [$HOME."/.vim/plugged/vim-snippets/snippets", ".vim/UltiSnips"]
+"自定义snippet 的代码片段在哪里寻找
 
 
-"=============== C =========================================
-"ab c_main int main(int argc, char *argv[<ESC>A{<CR><ESC>O<ESC>i<TAB>return 0;<ESC>O<ESC>i<TAB>
+"=============== vim-latex-live-preview
+let g:livepreview_previewer = 'evince'
+let g:livepreview_engine = '/usr/local/texlive/2018/bin/x86_64-linux/xelatex'
+let g:livepreview_cursorhold_recompile = 0
+autocmd Filetype tex setl updatetime=1	"PDF文件刷新频率
+nmap <F12> :LLPStartPreview<cr>
 
 
-"=============== HTML ====================================
-"使用HTML语言打开下面注释
-"inoremap < <><ESC>i
-"ab HTML !DOCTYPE html<ESC>A<CR><html<ESC>A<CR></html<ESC>O<TAB><head<ESC>A<CR></head<ESC>O<TAB><meta charset="utf-8<ESC>o<title<ESC>A TITLE </title<ESC><CR>o<boby<ESC>o</boby<ESC>O
+"YCM快捷键：
+"let g:ycm_key_list_select_completion = ['<c-n>', '<Down>']
+"let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>']
 "
-"
+
+"-----------------------------------------------------------------------------
+" Vim的autocmd FileType 判断语言类型，<C-i>来进行编译运行
+"-----------------------------------------------------------------------------
+" Filetype based Mappings----{
+        " Get current filetype -> :echo &filetype or as variable &filetype
+        " [ Builds / Compiles / Interpretes  ]
+
+        " C Compiler:
+        autocmd FileType c nnoremap <buffer> <C-i> :!gcc % && ./a.out <CR>
+
+        " C++ Compiler
+        autocmd FileType cpp nnoremap <buffer> <C-i> :!g++ % && ./a.out <CR>
+
+        " Python Interpreter
+        autocmd FileType python nnoremap <buffer> <C-i> :!python % <CR>
+
+        " Bash script
+        autocmd FileType sh nnoremap <buffer> <C-i> :!sh % <CR>
+
+        " Executable
+        nnoremap <buffer> <C-i> :!./% <CR>
+        "nnoremap <buffer> <C-i> :! %:p <CR>
+
+        " RCs (Configs)
+        autocmd FileType vim,zsh,tmux nnoremap <buffer> <C-i> :source % <CR>
+
+" }
